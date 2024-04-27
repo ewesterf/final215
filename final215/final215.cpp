@@ -11,10 +11,10 @@ void printMenu(int& choice)
 {
 	cout << "Please make your selection" << endl;
 	cout << "1. Blur" << endl;
-	cout << "2. Red" << endl;
-	cout << "3. Green" << endl;
-	cout << "4. Blue" << endl;
-	cout << "5. Black and White" << endl;
+	cout << "2. Black and White" << endl;
+	cout << "3. Red" << endl;
+	cout << "4. Green" << endl;
+	cout << "5. Blue" << endl;
 	cout << "Your selection:";
 	cin >> choice;
 }
@@ -44,8 +44,42 @@ void Blur(Image imgIn, Image& imgOut)
 					accB += pixColor.b;
 				}
 			}
-			Color pixColor = Color(accR / pixelCount, accG / pixelCount, accB / pixelCount);
-			imgOut.setPixel(x, y, pixColor);
+			Color blurColor = Color(accR / pixelCount, accG / pixelCount, accB / pixelCount);
+			imgOut.setPixel(x, y, blurColor);
+		}
+	}
+}
+
+void blackAndWhite(Image imgin, Image& bawImg)
+{
+	int width = imgin.getSize().x;
+	int height = imgin.getSize().y;
+
+	for (int y = 0; y < height - 1; y++)
+	{
+		for (int x = 0; x < width - 1; x++)
+		{
+			Color bawColor = imgin.getPixel(x, y);
+			int brightness = (bawColor.r / 3) + (bawColor.g / 3) + (bawColor.b / 3);
+			bawColor = Color(brightness, brightness, brightness);
+			bawImg.setPixel(x, y, bawColor);
+		}
+	}
+}
+
+void red(Image imgIn, Image& redImg)
+{
+	int width = imgIn.getSize().x;
+	int height = imgIn.getSize().y;
+
+	for (int y = 0; y < height - 1; y++)
+	{
+		for (int x = 0; x < width - 1; x++)
+		{
+			Color redColor = imgIn.getPixel(x, y);
+			redColor.g = 0;
+			redColor.b = 0;
+			redImg.setPixel(x, y, redColor);
 		}
 	}
 }
@@ -83,7 +117,54 @@ int main()
 
 	}
 
-	if (choice > 1)
+	if (choice == 2)
+	{
+		blackAndWhite(img, outImg);
+		outImg.saveToFile("blackandwhite.png");
+
+		//show image
+		Texture bawTex;
+		bawTex.loadFromImage(outImg);
+		if (!bawTex.loadFromFile("blackandwhite.png"))
+		{
+			cout << "Could not load image";
+			exit(1);
+		}
+
+		RenderWindow window(VideoMode(outImg.getSize().x, outImg.getSize().y), "Show me a picture");
+		Sprite bawSprite;
+		bawSprite.setTexture(bawTex);
+		window.draw(bawSprite);
+		window.display();
+
+		while (true);
+
+	}
+
+	if (choice == 3)
+	{
+		red(img, outImg);
+		outImg.saveToFile("red.png");
+
+		//show image
+		Texture redTex;
+		redTex.loadFromImage(outImg);
+		if (!redTex.loadFromFile("red.png"))
+		{
+			cout << "Could not load image";
+			exit(1);
+		}
+
+		RenderWindow window(VideoMode(outImg.getSize().x, outImg.getSize().y), "Show me a picture");
+		Sprite redSprite;
+		redSprite.setTexture(redTex);
+		window.draw(redSprite);
+		window.display();
+
+		while (true);
+	}
+
+	if (choice > 3)
 	{
 		cout << "Sorry, cannot perform that function" << endl;
 		exit(1);
