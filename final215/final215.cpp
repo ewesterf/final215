@@ -15,6 +15,7 @@ void printMenu(int& choice)
 	cout << "3. Red" << endl;
 	cout << "4. Green" << endl;
 	cout << "5. Blue" << endl;
+	cout << "6. Invert" << endl;
 	cout << "Your selection:";
 	cin >> choice;
 }
@@ -80,6 +81,58 @@ void red(Image imgIn, Image& redImg)
 			redColor.g = 0;
 			redColor.b = 0;
 			redImg.setPixel(x, y, redColor);
+		}
+	}
+}
+
+void green(Image imgIn, Image& redImg)
+{
+	int width = imgIn.getSize().x;
+	int height = imgIn.getSize().y;
+
+	for (int y = 0; y < height - 1; y++)
+	{
+		for (int x = 0; x < width - 1; x++)
+		{
+			Color greenColor = imgIn.getPixel(x, y);
+			greenColor.r = 0;
+			greenColor.b = 0;
+			redImg.setPixel(x, y, greenColor);
+		}
+	}
+}
+
+void blue(Image imgIn, Image& blueImg)
+{
+	int width = imgIn.getSize().x;
+	int height = imgIn.getSize().y;
+
+	for (int y = 0; y < height - 1; y++)
+	{
+		for (int x = 0; x < width - 1; x++)
+		{
+			Color blueColor = imgIn.getPixel(x, y);
+			blueColor.r = 0;
+			blueColor.g = 0;
+			blueImg.setPixel(x, y, blueColor);
+		}
+	}
+}
+
+void invert(Image imgIn, Image& invertImg)
+{
+	int width = imgIn.getSize().x;
+	int height = imgIn.getSize().y;
+
+	for (int y = 0; y < height - 1; y++)
+	{
+		for (int x = 0; x < width - 1; x++)
+		{
+			Color invertColor = imgIn.getPixel(x, y);
+			invertColor.r = 255 - invertColor.r;
+			invertColor.g = 255 - invertColor.g;
+			invertColor.b = 255 - invertColor.b;
+			invertImg.setPixel(x, y, invertColor);
 		}
 	}
 }
@@ -164,7 +217,76 @@ int main()
 		while (true);
 	}
 
-	if (choice > 3)
+	if (choice == 4)
+	{
+		green(img, outImg);
+		outImg.saveToFile("green.png");
+
+		//show image
+		Texture greenTex;
+		greenTex.loadFromImage(outImg);
+		if (!greenTex.loadFromFile("green.png"))
+		{
+			cout << "Could not load image";
+			exit(1);
+		}
+
+		RenderWindow window(VideoMode(outImg.getSize().x, outImg.getSize().y), "Show me a picture");
+		Sprite greenSprite;
+		greenSprite.setTexture(greenTex);
+		window.draw(greenSprite);
+		window.display();
+
+		while (true);
+	}
+
+	if (choice == 5)
+	{
+		blue(img, outImg);
+		outImg.saveToFile("blue.png");
+
+		//show image
+		Texture blueTex;
+		blueTex.loadFromImage(outImg);
+		if (!blueTex.loadFromFile("blue.png"))
+		{
+			cout << "Could not load image";
+			exit(1);
+		}
+
+		RenderWindow window(VideoMode(outImg.getSize().x, outImg.getSize().y), "Show me a picture");
+		Sprite blueSprite;
+		blueSprite.setTexture(blueTex);
+		window.draw(blueSprite);
+		window.display();
+
+		while (true);
+	}
+
+	if (choice == 6)
+	{
+		invert(img, outImg);
+		outImg.saveToFile("invert.png");
+
+		//show image
+		Texture invertTex;
+		invertTex.loadFromImage(outImg);
+		if (!invertTex.loadFromFile("invert.png"))
+		{
+			cout << "Could not load image";
+			exit(1);
+		}
+
+		RenderWindow window(VideoMode(outImg.getSize().x, outImg.getSize().y), "Show me a picture");
+		Sprite invertSprite;
+		invertSprite.setTexture(invertTex);
+		window.draw(invertSprite);
+		window.display();
+
+		while (true);
+	}
+
+	if (choice > 6)
 	{
 		cout << "Sorry, cannot perform that function" << endl;
 		exit(1);
