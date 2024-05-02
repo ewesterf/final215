@@ -142,7 +142,7 @@ int main()
 	int choice;
 	printMenu(choice);
 	Image img;
-	img.loadFromFile("images/landscape.png");
+	img.loadFromFile("images/tree.png");
 	Image outImg;
 	outImg.create(img.getSize().x, img.getSize().y);
 
